@@ -226,15 +226,18 @@ int main(int argc, char** argv)
   Problem_Parameter::Constitutive_law_pt =
     new GeneralisedHookean(&Problem_Parameter::Nu);
 
+  // Output directory
+  Problem_Parameter::Doc_info.set_directory("data/bubble_steady/");
+
   // Open trace file
-  Problem_Parameter::Trace_file.open("RESLT/trace_bubble_test.dat");
+  Problem_Parameter::Trace_file.open(Problem_Parameter::Doc_info.directory() + "trace_bubble_test.dat");
   // Increase precision of output
   Problem_Parameter::Trace_file.precision(20);
 
   // Open norm file
-  Problem_Parameter::Norm_file.open("RESLT/norm.dat");
-  Problem_Parameter::OccluHeight_file.open("RESLT/Occlusion_Height.dat");
-  Problem_Parameter::UpperWall_file.open("RESLT/UpperWall_trace.dat");
+  Problem_Parameter::Norm_file.open(Problem_Parameter::Doc_info.directory() + "norm.dat");
+  Problem_Parameter::OccluHeight_file.open(Problem_Parameter::Doc_info.directory() + "Occlusion_Height.dat");
+  Problem_Parameter::UpperWall_file.open(Problem_Parameter::Doc_info.directory() + "UpperWall_trace.dat");
 
   Problem_Parameter::Length = 4;
   Problem_Parameter::Major_Radius = 0.46;
@@ -249,9 +252,26 @@ int main(int argc, char** argv)
   /// number can be changed here
   Problem_Parameter::n_integral_measures = 13;
 
+
   BubbleInChannelProblem<MyNewElement> problem;
   problem.set_initial_condition();
   problem.set_V(MathematicalConstants::Pi * 0.46 * 0.46);
+
+  cout << "test_identity_matrix" << endl;
+  problem.test_identity_matrix();
+
+  // NOT IMPLEMENTED
+  //cout << "test_jacobian_call" << endl;
+  //problem.test_jacobian_call();
+
+  cout << "test_complex_identity_matrix" << endl;
+  problem.test_complex_identity_matrix();
+
+  //cout << "test_complex_solve" << endl;
+  //problem.test_complex_solve();
+
+
+  return 0;
 
   std::cout << "======================" << std::endl;
   std::cout << "======================" << std::endl;
@@ -259,8 +279,11 @@ int main(int argc, char** argv)
   std::cout << "V is " << problem.get_V() << std::endl;
   std::cout << "p_b is " << problem.get_P() << std::endl;
   std::cout << "U is " << problem.get_U() << std::endl;
+  std::cout << "Doc directory is " << Problem_Parameter::Doc_info.directory()
+            << std::endl;
   std::cout << "======================" << std::endl;
   std::cout << "======================" << std::endl;
+
 
   //////////////////////////////////////
   // Continue in U
@@ -285,7 +308,7 @@ int main(int argc, char** argv)
   // double U = problem.get_U();
   double Q = problem.get_Q();
 
-  for (int m = 0; m < 1000; m++)
+  for (int m = 0; m < 2; m++)
   {
     Q += dQ;
     problem.set_Q(Q);
