@@ -4,7 +4,7 @@
 # OOMPH_ROOT_DIR=$(make -s --no-print-directory print-top_builddir)
 
 #Set the number of tests to be checked
-EXPECTED_NUM_TESTS=1
+EXPECTED_NUM_TESTS=2
 
 # Setup validation directory
 #---------------------------
@@ -106,24 +106,23 @@ cd ..
 ACTUAL_NUM_TESTS_PASSED=$(grep OK Validation/validation.log | wc -l)
 ACTUAL_NUM_TESTS_FAILED=$(grep FAILED Validation/validation.log | wc -l)
 ACTUAL_NUM_TESTS_ERROR=$(grep ERROR Validation/validation.log | wc -l)
-if [ $ACTUAL_NUM_TESTS_ERROR > 0 ]; then
-    echo "Error in testing scripts. Check validation.log."
+if [ $ACTUAL_NUM_TESTS_ERROR -gt 0 ]; then
+    echo "Error in $ACTUAL_NUM_TESTS_ERROR testing scripts. Check validation.log."
     return 1
 fi
-if [ $ACTUAL_NUM_TESTS_PASSED > $EXPECTED_NUM_TESTS ]; then
-if [ $ACTUAL_NUM_TESTS_FAILED > 0 ]; then
-    echo "Failed test. Check validation.log."
+if [ $ACTUAL_NUM_TESTS_FAILED -gt 0 ]; then
+    echo "Failed $ACTUAL_NUM_TESTS_FAILED tests. Check validation.log."
     return 1
 fi
-if [ $ACTUAL_NUM_TESTS_PASSED > $EXPECTED_NUM_TESTS ]; then
+if [ $ACTUAL_NUM_TESTS_PASSED -gt $EXPECTED_NUM_TESTS ]; then
     echo "Passed more tests than expected! Check EXPECTED_NUM_TESTS and validation.log."
     return 2
 fi
-if [ $ACTUAL_NUM_TESTS_PASSED = $EXPECTED_NUM_TESTS ]; then
-    echo "Passed all $(ACTUAL_NUM_TESTS_PASSED) tests."
+if [ $ACTUAL_NUM_TESTS_PASSED -eq $EXPECTED_NUM_TESTS ]; then
+    echo "Passed all $ACTUAL_NUM_TESTS_PASSED tests."
     return 0
 fi
-if [ $ACTUAL_NUM_TESTS_PASSED < $EXPECTED_NUM_TESTS ]; then
+if [ $ACTUAL_NUM_TESTS_PASSED -lt $EXPECTED_NUM_TESTS ]; then
     echo "Passed less tests than expected! Check EXPECTED_NUM_TESTS and validation.log."
     return 1
 fi
